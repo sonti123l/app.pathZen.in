@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import LoginMotionCard from '@/components/core/Login'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -8,7 +7,7 @@ export const Route = createFileRoute('/')({
 function RouteComponent() {
   return (
     <div>
-      <LoginMotionCard />
+        <h1>Hi</h1>
     </div>
   )
 }
