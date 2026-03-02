@@ -1,0 +1,8 @@
+
+C:\Users\saitr\OneDrive\Desktop\EduTech\free-course\src\components\core\Login.tsx
+  2:1   error  Imports "FormEvent" and "MouseEvent" are only used as type                    @typescript-eslint/consistent-type-imports
+  2:20  error  Member 'FormEvent' of the import declaration should be sorted alphabetically  sort-imports
+
+✖ 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
