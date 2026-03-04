@@ -74,7 +74,7 @@ class FetchService {
     Cookies.remove('token')
     Cookies.remove('refreshToken')
     Cookies.remove('userData')
-    window.location.href = '/'
+    window.location.href = '/login'
   }
 
   async refreshAccessToken(): Promise<string | null> {
