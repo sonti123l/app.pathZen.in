@@ -262,8 +262,6 @@ export default function Auth() {
     },
     onSuccess: (data) => {
       localStorage.setItem('token', data?.data.accessToken)
-
-      navigate({ to: '/dashboard' })
     },
   })
 
