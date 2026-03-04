@@ -238,10 +238,14 @@ export default function Auth() {
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      const res = await authLogin({ email: lEmail, password: lPassword })
-      return res
+      const res = await authLogin({ email: lEmail, password: lPassword });
+      console.log(res)
+      return res?.data
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      localStorage.setItem('token', data?.accessToken)
+      localStorage.setItem('userDetails', JSON.stringify(data?.data, null, 2))
+
       navigate({ to: '/dashboard' })
     },
   })
@@ -257,7 +261,7 @@ export default function Auth() {
       return res
     },
     onSuccess: (data) => {
-      localStorage.set('token', data?.data.accessToken)
+      localStorage.setItem('token', data?.data.accessToken)
 
       navigate({ to: '/dashboard' })
     },
