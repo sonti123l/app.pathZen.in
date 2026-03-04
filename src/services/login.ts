@@ -1,24 +1,27 @@
 import { $fetch } from '@/http/fetch'
 
-export const authLogin = async (payload: {email: string, password: string}) => {
+export const authLogin = async (payload: {
+  email: string
+  password: string
+}) => {
   try {
-    const response = await $fetch.post(`/auth/login`, payload)
+    const response = await $fetch.post(`/api/login`, payload)
     return response
   } catch (err) {
-    return err;
+    return err
   }
 }
 
 export const authRegister = async (payload: {
-  name: string;
-  email: string;
-  password: string;
-  rollNo: string;
+  name: string
+  email: string
+  password: string
+  rollNo: string
 }) => {
   try {
-    const response = await $fetch.post(`/api/register`, payload);
-    return response;
+    const response = await $fetch.post(`/api/register`, payload)
+    return response
   } catch (err) {
-    return err;
+    return err
   }
-};
+}
