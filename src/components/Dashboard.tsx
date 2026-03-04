@@ -168,6 +168,9 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
 
   const inProgress = ALL_COURSES.filter(c => c.completedLessons > 0 && c.completedLessons < c.totalLessons);
   const completed  = ALL_COURSES.filter(c => c.completedLessons === c.totalLessons);
+  const userDetails = localStorage.getItem("userDetails");
+
+ const userProfileUpdate = JSON.parse(userDetails);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -200,7 +203,7 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
           </div>
           {sideOpen && (
             <div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: T.text, letterSpacing: "-0.04em" }}>TechPath</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: T.text, letterSpacing: "-0.04em" }}>Path Zen</div>
               <div style={{ fontSize: 9.5, color: T.textMuted, letterSpacing: "0.1em", textTransform: "uppercase" }}>Learn · Build · Grow</div>
             </div>
           )}
@@ -234,26 +237,14 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
           })}
         </nav>
 
-        {/* XP widget */}
-        {sideOpen && (
-          <div style={{ margin: "8px 12px", padding: "14px", background: T.accentBg, border: `1px solid ${T.accentBorder}`, borderRadius: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-              <span style={{ fontSize: 10.5, color: T.textMuted, textTransform: "uppercase", letterSpacing: "0.08em" }}>Level {USER.level}</span>
-              <span style={{ fontSize: 10.5, fontWeight: 700, color: T.accent }}>{(USER.xp / 1000).toFixed(1)}k XP</span>
-            </div>
-            <div style={{ height: 4, background: T.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", borderRadius: 4, overflow: "hidden", marginBottom: 7 }}>
-              <div style={{ height: "100%", width: `${(USER.xp / USER.xpNext) * 100}%`, background: "linear-gradient(90deg,#6366f1,#a855f7)", borderRadius: 4 }} />
-            </div>
-            <div style={{ fontSize: 10, color: T.textMuted }}>🔥 {USER.streak} day streak · {USER.xpNext - USER.xp} XP to next</div>
-          </div>
-        )}
+       
 
         {/* User row */}
         <div style={{ padding: sideOpen ? "12px 14px 16px" : "12px 8px 16px", borderTop: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 10, justifyContent: sideOpen ? "flex-start" : "center" }}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#fff", flexShrink: 0 }}>{USER.initials}</div>
+          <div style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 800, color: "#fff", flexShrink: 0 }}>{userProfileUpdate.user_name.charAt(0).toUpperCase()}</div>
           {sideOpen && (
             <div style={{ overflow: "hidden" }}>
-              <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{USER.name}</div>
+              <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{userProfileUpdate.user_name}</div>
               <div style={{ fontSize: 10.5, color: T.textMuted }}>{USER.role}</div>
             </div>
           )}
@@ -293,10 +284,9 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
 
             {/* Profile button */}
             <button onClick={() => setProfileOpen(p => !p)} style={{ display: "flex", alignItems: "center", gap: 9, padding: "5px 12px 5px 6px", borderRadius: 10, background: T.input, border: `1px solid ${profileOpen ? T.accentBorder : T.border}`, transition: "border 0.15s" }}>
-              <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10.5, fontWeight: 800, color: "#fff" }}>{USER.initials}</div>
+              <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 800, color: "#fff" }}>{userProfileUpdate.user_name.charAt(0).toUpperCase()}</div>
               <div>
-                <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, lineHeight: 1.2 }}>{USER.name.split(" ")[0]}</div>
-                <div style={{ fontSize: 10, color: T.textMuted }}>Lv.{USER.level}</div>
+                <div style={{ fontSize: 12.5, fontWeight: 600, color: T.text, lineHeight: 1.2 }}>{userProfileUpdate.user_name.split(" ")[0]}</div>
               </div>
               <span style={{ color: T.textMuted, display: "flex" }}>{I.chevronDown}</span>
             </button>
@@ -311,20 +301,12 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
                   </div>
                   <div style={{ padding: "0 18px 18px", position: "relative" }}>
                     <div style={{ marginTop: -22, marginBottom: 12, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                      <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", border: `3px solid ${T.bgCard}` }}>{USER.initials}</div>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#6366f1,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#fff", border: `3px solid ${T.bgCard}` }}>{userProfileUpdate.user_name.charAt(0).toUpperCase()}</div>
                       <span style={{ fontSize: 10, color: T.accent, background: T.accentBg, padding: "3px 9px", borderRadius: 20, fontWeight: 600, border: `1px solid ${T.accentBorder}` }}>🔥 {USER.streak}d Streak</span>
                     </div>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: T.text, letterSpacing: "-0.02em" }}>{USER.name}</div>
-                    <div style={{ fontSize: 11.5, color: T.textMuted, marginBottom: 14 }}>{USER.role} · {USER.location}</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 14 }}>
-                      {[{ l: "Level", v: USER.level }, { l: "XP", v: `${(USER.xp / 1000).toFixed(1)}k` }, { l: "Courses", v: ALL_COURSES.length }].map(s => (
-                        <div key={s.l} style={{ textAlign: "center", padding: "8px 6px", background: T.input, borderRadius: 9, border: `1px solid ${T.border}` }}>
-                          <div style={{ fontSize: 14, fontWeight: 700, color: T.accent }}>{s.v}</div>
-                          <div style={{ fontSize: 10, color: T.textMuted, marginTop: 1 }}>{s.l}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div style={{ display: "flex", gap: 8 }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: T.text, letterSpacing: "-0.02em" }}>{userProfileUpdate.user_name}</div>
+           
+                    <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
                       <button style={{ flex: 1, padding: "8px", borderRadius: 8, background: T.accentBg, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600 }}>Edit Profile</button>
                       <button style={{ flex: 1, padding: "8px", borderRadius: 8, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", fontSize: 12, fontWeight: 600 }}>Sign Out</button>
                     </div>
@@ -345,7 +327,7 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 <span style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.12em" }}>Welcome back 👋</span>
               </div>
-              <h1 style={{ fontSize: 30, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1.15, marginBottom: 8 }}>Good morning, {USER.name.split(" ")[0]}!</h1>
+              <h1 style={{ fontSize: 30, fontWeight: 800, color: "#fff", letterSpacing: "-0.04em", lineHeight: 1.15, marginBottom: 8 }}>Good morning, {userProfileUpdate.user_name.split(" ")[0]}!</h1>
               <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 22 }}>You're on a {USER.streak}-day streak — keep building your skills.</p>
               <div style={{ display: "flex", gap: 10 }}>
                 <button className="btn-hover" onClick={() => navigate(`course:${inProgress[0]?.id || ALL_COURSES[0].id}`)} style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 20px", borderRadius: 10, background: "#6366f1", color: "#fff", fontSize: 13.5, fontWeight: 600, boxShadow: "0 4px 16px rgba(99,102,241,0.5)" }}>
