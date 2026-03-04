@@ -1,6 +1,6 @@
-import Cookies from "js-cookie";
-import prepareURLEncodedParams from './prepareUrlEncodedParams';
-
+import Cookies from 'js-cookie'
+import prepareURLEncodedParams from './prepareUrlEncodedParams'
+import type { IAPIResponse } from './interfaces/app'
 
 export const urlConstants = {
   default: import.meta.env.VITE_PUBLIC_API_URL,
@@ -33,7 +33,7 @@ class FetchService {
   }
 
   configureAuthorization(config: any) {
-    let accessToken = Cookies.get('token') || ''
+    const accessToken = Cookies.get('token') || ''
 
     config.headers['Authorization'] = 'Bearer ' + accessToken
   }
@@ -133,7 +133,7 @@ class FetchService {
   }
 
   async hit(...args: any): Promise<IAPIResponse> {
-    let [path, config] = args
+    const [path, config] = args
 
     const method = config.method || 'GET'
     const allowConcurrent =
@@ -161,7 +161,7 @@ class FetchService {
       this.configureAuthorization(config)
     }
 
-    let url = urlConstants[this.type] + path
+    const url = urlConstants[this.type] + path
     let response: any
 
     try {
@@ -251,7 +251,7 @@ class FetchService {
       } catch {
         errorData = { message: response.statusText }
       }
-      let err: any = new Error(errorData.message || response.statusText)
+      const err: any = new Error(errorData.message || response.statusText)
       err.data = errorData
       err.status = response.status
       throw err

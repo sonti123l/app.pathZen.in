@@ -1,12 +1,11 @@
 export const arrayToUrlString = (key: any, value: any) => {
-  let arrayUrl: any
-  arrayUrl = value.map((item: any) => {
+  const arrayUrl = value.map((item: any) => {
     return `${key}=${item}`
   })
   return arrayUrl.join('&')
 }
 const prepareURLEncodedParams = (url: string, params: any) => {
-  let paramsArray = Object.keys(params)
+  const paramsArray = Object.keys(params)
     .map((key) => {
       const value = params[key]
 
@@ -23,7 +22,7 @@ const prepareURLEncodedParams = (url: string, params: any) => {
     })
     .filter((e) => e.length)
 
-  let paramsURLs = paramsArray.filter((e) => e).join('&')
+  const paramsURLs = paramsArray.filter((e) => e).join('&')
 
   if (paramsURLs) {
     return url + '?' + paramsURLs
