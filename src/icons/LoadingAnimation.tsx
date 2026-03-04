@@ -1,219 +1,239 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const ICONS = [
-  {
-    id: "assignment",
-    label: "Assignment",
-    color: "#f472b6",
-    svg: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <line x1="9" y1="13" x2="15" y2="13" />
-        <line x1="9" y1="17" x2="13" y2="17" />
-      </svg>
-    ),
-  },
-  {
-    id: "course",
-    label: "Course",
-    color: "#a78bfa",
-    svg: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-      </svg>
-    ),
-  },
-  {
-    id: "exam",
-    label: "Exam",
-    color: "#34d399",
-    svg: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="9 11 12 14 22 4" />
-        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-      </svg>
-    ),
-  },
-  {
-    id: "video",
-    label: "Video",
-    color: "#fbbf24",
-    svg: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="23 7 16 12 23 17 23 7" />
-        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-      </svg>
-    ),
-  },
+// ─── Icons ─────────────────────────────────────────────────────────────────
+const CourseIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </svg>
+);
+const AssignmentIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <line x1="9" y1="13" x2="15" y2="13" />
+    <line x1="9" y1="17" x2="13" y2="17" />
+  </svg>
+);
+const VideoIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="14" height="14" rx="2" />
+    <path d="m16 9 5-3v10l-5-3V9z" />
+  </svg>
+);
+const ExamIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 11 12 14 22 4" />
+    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  </svg>
+);
+const InternshipIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="7" width="20" height="14" rx="2" />
+    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+    <line x1="12" y1="12" x2="12" y2="16" />
+    <line x1="10" y1="14" x2="14" y2="14" />
+  </svg>
+);
+
+// ─── Config ─────────────────────────────────────────────────────────────────
+interface IconConfig { id: string; label: string; color: string; Icon: React.FC; }
+
+const ICON_LIST: IconConfig[] = [
+  { id: "course",     label: "Course",        color: "#818cf8", Icon: CourseIcon     },
+  { id: "assignment", label: "Assignment",    color: "#f472b6", Icon: AssignmentIcon },
+  { id: "video",      label: "Video Lecture", color: "#fb923c", Icon: VideoIcon      },
+  { id: "exam",       label: "Exam",          color: "#34d399", Icon: ExamIcon       },
+  { id: "internship", label: "Internship",    color: "#facc15", Icon: InternshipIcon },
 ];
 
-const R = 90;
-const TOTAL = 6000;
+const N          = ICON_LIST.length;
+const RADIUS     = 40;
+const REVOLUTION = 12000; // ms per full revolution
+
+// Highlight zone: top of circle (12 o'clock = 0°)
+const HIGHLIGHT  = 0;
 
 export default function LoadingAnimation() {
-  const [angle, setAngle] = useState(0);
-  const startRef = useRef(null);
+  const [masterDeg, setMasterDeg] = useState(0);
+  // Track which icon label is currently shown — only switch when a new icon
+  // is clearly the closest, to avoid rapid flickering
+  const [activeIdx, setActiveIdx] = useState(0);
+  const t0  = useRef<number | null>(null);
+  const raf = useRef<number>(0);
 
   useEffect(() => {
-    let raf;
-    const tick = (ts) => {
-      if (!startRef.current) startRef.current = ts;
-      const elapsed = ts - startRef.current;
-      setAngle((elapsed % TOTAL) / TOTAL * 360);
-      raf = requestAnimationFrame(tick);
+    const tick = (ts: number) => {
+      if (!t0.current) t0.current = ts;
+      const elapsed = ts - t0.current;
+      const deg = (elapsed % REVOLUTION) / REVOLUTION * 360;
+      setMasterDeg(deg);
+
+      // Find which icon is closest to HIGHLIGHT (top = 0°)
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      for (let i = 0; i < N; i++) {
+        const worldDeg = ((i / N) * 360 + deg) % 360;
+        // Normalize to -180..180 relative to HIGHLIGHT
+        let diff = worldDeg - HIGHLIGHT;
+        if (diff > 180)  diff -= 360;
+        if (diff < -180) diff += 360;
+        const dist = Math.abs(diff);
+        if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+      }
+      setActiveIdx(bestIdx);
+
+      raf.current = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
   }, []);
 
-  const spotAngle = (angle + 270) % 360;
-  const section = 360 / ICONS.length;
-  const activeIdx = Math.floor(spotAngle / section) % ICONS.length;
-  const phase = (spotAngle % section) / section;
-  const bell = Math.sin(phase * Math.PI);
-
-  const arcLen = 2 * Math.PI * R;
+  const C = 2 * Math.PI * RADIUS;
 
   return (
-    <div style={root}>
-      <svg width="320" height="320" viewBox="-160 -160 320 320" style={{ overflow: "visible" }}>
-        {/* Dashed track */}
-        <circle r={R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={1} strokeDasharray="4 7" />
+    <div style={css.root}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+      `}</style>
 
-        {/* Glowing trailing arc */}
-        <circle
-          r={R} fill="none"
-          stroke="url(#arc)"
-          strokeWidth={2.5}
-          strokeLinecap="round"
-          strokeDasharray={`${arcLen * 0.25} ${arcLen * 0.75}`}
-          transform={`rotate(${angle - 90})`}
-          style={{ filter: "drop-shadow(0 0 6px rgba(167,139,250,0.7))" }}
-        />
-
-        {/* Leading spark */}
-        {(() => {
-          const rad = ((angle - 90) * Math.PI) / 180;
-          const sx = Math.cos(rad) * R;
-          const sy = Math.sin(rad) * R;
-          return (
-            <g>
-              <circle cx={sx} cy={sy} r={5} fill="#a78bfa"
-                style={{ filter: "drop-shadow(0 0 10px #a78bfa)" }} />
-              <circle cx={sx} cy={sy} r={9} fill="none"
-                stroke="#a78bfa" strokeWidth={1} opacity={0.3} />
-            </g>
-          );
-        })()}
-
+      <svg width="120" height="120" viewBox="-60 -60 120 120" style={{ overflow: "visible", display: "block" }}>
         <defs>
-          <linearGradient id="arc" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#a78bfa" stopOpacity="0" />
-            <stop offset="100%" stopColor="#a78bfa" stopOpacity="1" />
+          <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor="#818cf8" stopOpacity="0" />
+            <stop offset="70%"  stopColor="#818cf8" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#c4b5fd" stopOpacity="1" />
           </linearGradient>
         </defs>
 
+        {/* Static dashed track */}
+        <circle r={RADIUS} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={1} strokeDasharray="3 6" />
+
+        {/* Rotating arc + spark */}
+        <g style={{ transformOrigin: "0 0", transform: `rotate(${masterDeg}deg)` }}>
+          <circle
+            r={RADIUS} fill="none" stroke="url(#arcGrad)"
+            strokeWidth={2} strokeLinecap="round"
+            strokeDasharray={`${C * 0.26} ${C * 0.74}`}
+            strokeDashoffset={C * 0.26}
+            style={{ transformOrigin: "0 0", transform: "rotate(-90deg)" }}
+          />
+          <circle cx={0} cy={-RADIUS} r={2.5} fill="#c4b5fd" filter="url(#glow)" />
+          <circle cx={0} cy={-RADIUS} r={5}   fill="none" stroke="#c4b5fd" strokeWidth={0.7} opacity={0.3} />
+        </g>
+
         {/* Orbiting icons */}
-        {ICONS.map((icon, i) => {
-          const baseAngle = (i / ICONS.length) * 360;
-          const rad = ((baseAngle + angle - 90) * Math.PI) / 180;
-          const x = Math.cos(rad) * R;
-          const y = Math.sin(rad) * R;
+        {ICON_LIST.map(({ id, color, Icon }, i) => {
+          const baseDeg  = (i / N) * 360;
+          const worldDeg = (baseDeg + masterDeg) % 360;
 
-          const isActive = i === activeIdx;
-          const distFromActive = Math.min(
-            Math.abs(i - activeIdx),
-            ICONS.length - Math.abs(i - activeIdx)
-          );
+          // Position on circle: 0° = top
+          const rad = (worldDeg * Math.PI) / 180;
+          const x = Math.sin(rad) * RADIUS;
+          const y = -Math.cos(rad) * RADIUS;
 
-          const scale = isActive ? 1 + bell * 0.7 : Math.max(0.65, 1 - distFromActive * 0.12);
-          const opacity = isActive ? 1 : Math.max(0.3, 1 - distFromActive * 0.25);
-          const glowOpacity = isActive ? bell * 0.6 : 0;
-          const counterRot = -(baseAngle + angle - 90);
+          /*
+           * PULSE: 1 scale-out and 1 scale-in per revolution.
+           * sin²(worldAngle_rad / 1) — peaks once at 0° (top), troughs at 180° (bottom).
+           * This means each icon grows as it approaches the top, shrinks as it leaves.
+           */
+          const sinSq    = Math.sin(rad / 1) ** 2; // 1 peak per revolution
+          const scale    = 0.6 + sinSq * 0.7;       // 0.6 → 1.3
+          const opacity  = 0.22 + sinSq * 0.78;     // 0.22 → 1.0
+          const counterDeg = -worldDeg;
 
           return (
-            <g key={icon.id} transform={`translate(${x},${y})`}>
-              {/* Halo glow */}
-              <circle r={30} fill="none" stroke={icon.color}
-                strokeWidth={1} opacity={glowOpacity}
-                style={{ filter: `drop-shadow(0 0 12px ${icon.color})` }} />
-
-              {/* Disc */}
-              <circle r={26}
-                fill={`${icon.color}18`}
-                stroke={icon.color}
-                strokeWidth={isActive ? 1.5 : 0.8}
+            <g key={id} transform={`translate(${x},${y})`}>
+              <circle
+                r={13}
+                fill={`${color}14`}
+                stroke={color}
+                strokeWidth={0.7 + sinSq * 0.9}
                 opacity={opacity}
                 transform={`scale(${scale})`}
-                style={{ filter: isActive ? `drop-shadow(0 0 16px ${icon.color}99)` : "none" }}
+                style={sinSq > 0.65 ? { filter: `drop-shadow(0 0 5px ${color}aa)` } : undefined}
               />
-
-              {/* Icon — counter-rotated to stay upright */}
-              <g transform={`rotate(${counterRot}) scale(${scale})`}
+              <g
+                transform={`rotate(${counterDeg}) scale(${scale})`}
                 opacity={opacity}
-                style={{ color: isActive ? icon.color : "rgba(255,255,255,0.4)" }}>
-                <g transform="translate(-12,-12)">{icon.svg}</g>
+                style={{ color: sinSq > 0.5 ? color : "rgba(255,255,255,0.3)" }}
+              >
+                <g transform="translate(-7,-7)"><Icon /></g>
               </g>
             </g>
           );
         })}
 
-        {/* Center dot */}
-        <circle r={6} fill="#1e293b" stroke="rgba(167,139,250,0.4)" strokeWidth={1.5} />
-        <circle r={3} fill="#a78bfa" style={{ filter: "drop-shadow(0 0 6px #a78bfa)" }} />
+        {/* Center */}
+        <circle r={3.5} fill="#0d1117" stroke="rgba(196,181,253,0.25)" strokeWidth={1} />
+        <circle r={1.8} fill="#a78bfa" filter="url(#glow)" />
       </svg>
 
-      {/* Active label */}
-      <div style={labelWrap}>
-        {ICONS.map((icon, i) => (
-          <span key={icon.id} style={{
-            ...labelStyle,
-            color: icon.color,
-            opacity: i === activeIdx ? 1 : 0,
-            transform: i === activeIdx ? "translateY(0)" : "translateY(5px)",
-            position: i === activeIdx ? "relative" : "absolute",
-            transition: "opacity 0.25s, transform 0.25s",
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%",
-              background: icon.color, boxShadow: `0 0 8px ${icon.color}`,
-              display: "inline-block", marginRight: 8,
-            }} />
-            {icon.label}
-          </span>
-        ))}
+      {/* Label — only 1 shown at a time, held steady, fades in/out with CSS transition */}
+      <div style={css.labelArea}>
+        {ICON_LIST.map(({ id, color, label }, i) => {
+          const on = i === activeIdx;
+          return (
+            <span
+              key={id}
+              style={{
+                ...css.label,
+                color,
+                opacity:   on ? 1 : 0,
+                transform: on ? "translateY(0px)" : "translateY(5px)",
+                transition: "opacity 0.5s ease, transform 0.5s ease",
+                position: "absolute",
+                pointerEvents: "none",
+              }}
+            >
+              <span style={{ ...css.dot, background: color, boxShadow: `0 0 5px ${color}` }} />
+              {label}
+            </span>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-const root = {
-  minHeight: "100vh",
-  background: "#080c14",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 24,
-  fontFamily: "'DM Sans', system-ui, sans-serif",
-};
-
-const labelWrap = {
-  height: 26,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  position: "relative",
-  width: 160,
-};
-
-const labelStyle = {
-  fontSize: 13,
-  fontWeight: 600,
-  letterSpacing: "0.1em",
-  textTransform: "uppercase",
-  display: "flex",
-  alignItems: "center",
+const css: Record<string, React.CSSProperties> = {
+  root: {
+    minHeight: "100vh",
+    background: "#0d1117",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+    fontFamily: "'Outfit', system-ui, sans-serif",
+  },
+  labelArea: {
+    height: 20,
+    width: 160,
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  label: {
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: "0.1em",
+    textTransform: "uppercase",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    whiteSpace: "nowrap",
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: "50%",
+    flexShrink: 0,
+    display: "inline-block",
+  },
 };

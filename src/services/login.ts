@@ -7,7 +7,7 @@ export const authLogin = async (payload: {
   try {
     const response = await $fetch.post(`/api/login`, payload)
     return response
-  } catch (err) {
+  } catch (err: any) {
     return err
   }
 }
@@ -21,7 +21,7 @@ export const authRegister = async (payload: {
   try {
     const response = await $fetch.post(`/api/register`, payload)
     return response
-  } catch (err) {
+  } catch (err: any) {
     return err
   }
 }

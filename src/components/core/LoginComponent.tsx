@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { authLogin, authRegister } from '@/services/login'
+import LoadingAnimation from '@/icons/LoadingAnimation'
 
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap');
@@ -79,7 +80,7 @@ function Field({
           padding: '0 14px',
           transition: 'border-color .15s, box-shadow .15s',
         }}
-        onFocus={() => {}}
+        onFocus={() => { }}
         className="input-wrap"
       >
         {icon}
@@ -239,7 +240,6 @@ export default function Auth() {
   const loginMutation = useMutation({
     mutationFn: async () => {
       const res = await authLogin({ email: lEmail, password: lPassword });
-      console.log(res)
       return res?.data
     },
     onSuccess: (data) => {
@@ -286,6 +286,10 @@ export default function Auth() {
 
   const getErrorMsg = (data: any) =>
     data?.values && data.status >= 400 ? data.values : null
+
+  if (loginMutation.isPending || registerMutation.isPending) {
+    return <LoadingAnimation />
+  }
 
   return (
     <>
