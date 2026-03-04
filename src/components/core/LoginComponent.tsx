@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { authLogin, authRegister } from '@/services/login'
 
-// ─── tiny keyframe injection ───────────────────────────────────────────────
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap');
 
@@ -37,7 +36,6 @@ const STYLES = `
   * { font-family: 'Sora', sans-serif; box-sizing: border-box; }
 `
 
-// ─── shared field component ─────────────────────────────────────────────────
 function Field({
   label,
   type = 'text',
@@ -81,7 +79,7 @@ function Field({
           padding: '0 14px',
           transition: 'border-color .15s, box-shadow .15s',
         }}
-        onFocus={() => {}} // handled via CSS :focus-within below
+        onFocus={() => {}}
         className="input-wrap"
       >
         {icon}
@@ -106,7 +104,6 @@ function Field({
   )
 }
 
-// ─── icons ──────────────────────────────────────────────────────────────────
 const IconEmail = () => (
   <svg
     width="16"
@@ -188,7 +185,6 @@ const IconEye = () => (
   </svg>
 )
 
-// ─── error banner ────────────────────────────────────────────────────────────
 function ErrorBanner({ msg }: { msg: string }) {
   return (
     <div
@@ -222,17 +218,14 @@ function ErrorBanner({ msg }: { msg: string }) {
   )
 }
 
-// ─── main component ──────────────────────────────────────────────────────────
 export default function Auth() {
   const [mode, setMode] = useState<'login' | 'register'>('login')
 
-  // login state
   const [lEmail, setLEmail] = useState('')
   const [lPassword, setLPassword] = useState('')
   const [lShow, setLShow] = useState(false)
   const [remember, setRemember] = useState(false)
 
-  // register state
   const [rName, setRName] = useState('')
   const [rEmail, setREmail] = useState('')
   const [rPassword, setRPassword] = useState('')
@@ -243,16 +236,16 @@ export default function Auth() {
 
   const navigate = useNavigate()
 
-  // ── login mutation ─────────────────────────────────────────────────────────
   const loginMutation = useMutation({
     mutationFn: async () => {
       const res = await authLogin({ email: lEmail, password: lPassword })
       return res
     },
-    onSuccess: () => navigate({ to: '/dashboard' }),
+    onSuccess: () => {
+      navigate({ to: '/dashboard' })
+    },
   })
 
-  // ── register mutation ──────────────────────────────────────────────────────
   const registerMutation = useMutation({
     mutationFn: async () => {
       const res = await authRegister({
@@ -263,10 +256,13 @@ export default function Auth() {
       })
       return res
     },
-    onSuccess: () => navigate({ to: '/dashboard' }),
+    onSuccess: (data) => {
+      localStorage.set('token', data?.data.accessToken)
+
+      navigate({ to: '/dashboard' })
+    },
   })
 
-  // ── handlers ───────────────────────────────────────────────────────────────
   const handleLogin = () => {
     if (!lEmail || !lPassword) return
     loginMutation.mutate()
@@ -287,7 +283,6 @@ export default function Auth() {
   const getErrorMsg = (data: any) =>
     data?.values && data.status >= 400 ? data.values : null
 
-  // ── render ─────────────────────────────────────────────────────────────────
   return (
     <>
       <style>{STYLES}</style>
@@ -309,7 +304,6 @@ export default function Auth() {
             'linear-gradient(135deg,#f0ecff 0%,#e8e0fa 50%,#ede8ff 100%)',
         }}
       >
-        {/* ── CARD ── */}
         <div
           key={mode}
           className={mode === 'login' ? 'card-login' : 'card-reg'}
@@ -322,7 +316,6 @@ export default function Auth() {
             boxShadow: '0 8px 48px rgba(120,90,200,0.13)',
           }}
         >
-          {/* brand */}
           <div
             style={{
               display: 'flex',
@@ -358,7 +351,6 @@ export default function Auth() {
             {mode === 'login' ? 'Sign in' : 'Create account'}
           </h1>
 
-          {/* ── LOGIN FORM ── */}
           {mode === 'login' && (
             <>
               {getErrorMsg(loginMutation.data) && (
