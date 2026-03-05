@@ -1,6 +1,8 @@
-import { ALL_COURSES, Course, CYBER_COURSES, DEVOPS_COURSES, Theme, USER } from "@/helpers/constants/data";
-import I from "@/icons/Icons";
 import { useState } from "react";
+import{ ALL_COURSES, Course, CYBER_COURSES, DEVOPS_COURSES, Theme, USER } from "@/helpers/constants/data";
+import I from "@/icons/Icons";
+import { useNavigate } from "@tanstack/react-router";
+
 
 
 /* ══════════════════════════════════════════════════════
@@ -156,6 +158,7 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
   const [profileOpen, setProfileOpen] = useState(false);
   const [filterCat,   setFilterCat]   = useState("All");
   const W = sideOpen ? 240 : 68;
+  const userNavigate = useNavigate(); 
 
   const NAV_ITEMS = [
     { id: "home",         label: "Home",           icon: I.home     },
@@ -307,7 +310,7 @@ export default function Dashboard({ T, theme, setTheme, navigate }: DashboardPro
                     <div style={{ fontSize: 15, fontWeight: 700, color: T.text, letterSpacing: "-0.02em" }}>{userProfileUpdate.user_name}</div>
            
                     <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-                      <button style={{ flex: 1, padding: "8px", borderRadius: 8, background: T.accentBg, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600 }}>Edit Profile</button>
+                      <button style={{ flex: 1, padding: "8px", borderRadius: 8, background: T.accentBg, border: `1px solid ${T.accentBorder}`, color: T.accent, fontSize: 12, fontWeight: 600 }} onClick={() => userNavigate({to:"/profile"})}>Edit Profile</button>
                       <button style={{ flex: 1, padding: "8px", borderRadius: 8, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#ef4444", fontSize: 12, fontWeight: 600 }}>Sign Out</button>
                     </div>
                   </div>
