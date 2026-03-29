@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import Auth from '@/components/core/LoginComponent'
+import PathZenApp from '@/components/core/Index'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -8,7 +8,7 @@ export const Route = createFileRoute('/')({
 function RouteComponent() {
   return (
     <div>
-      <Auth />
+      <PathZenApp/>
     </div>
   )
 }

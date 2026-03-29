@@ -1,7 +1,8 @@
 import { useState } from "react";
-import{ ALL_COURSES, Course, CYBER_COURSES, DEVOPS_COURSES, Theme, USER } from "@/helpers/constants/data";
-import I from "@/icons/Icons";
 import { useNavigate } from "@tanstack/react-router";
+import { ALL_COURSES, Course, CYBER_COURSES, DEVOPS_COURSES, Theme, USER } from "@/helpers/constants/data";
+import I from "@/icons/Icons";
+
 
 
 
