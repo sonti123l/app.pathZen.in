@@ -50,8 +50,7 @@ export const style = `
     padding: 10px 22px; border-radius: 6px; opacity: 1;
     transition: background 0.2s, color 0.2s;
   }
-  .nav-cta:hover { background: var(--teal); color: #fff; opacity: 1; }
-  .nav-cta.active { background: var(--ink); color: var(--cream); opacity: 1; }
+
   /* Hamburger */
   .nav-hamburger {
     display: none; flex-direction: column; gap: 5px; cursor: pointer;
@@ -100,13 +99,13 @@ export const style = `
   }
   .hero-tag .dot { width: 6px; height: 6px; background: var(--teal-light); border-radius: 50%; animation: pulse 1.5s infinite; display: inline-block; flex-shrink: 0; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
-  .hero h1 {
+  .hero h2 {
     font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 800; line-height: 1.02; letter-spacing: -2px;
     color: #fff; margin-bottom: 1.5rem;
     animation: fadeUp 0.7s 0.1s ease both;
   }
-  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero h2 em { color: var(--gold); font-style: normal; }
   .hero-sub {
     font-size: clamp(1rem, 1.4vw, 1.2rem); font-weight: 300; line-height: 1.7;
     color: rgba(255,255,255,0.65); max-width: 540px; margin-bottom: 2.5rem;

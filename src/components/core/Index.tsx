@@ -101,13 +101,13 @@ const HomePage = ({ setPage, navigate }) => {
           <div className="hero-tag">
             <span className="dot"></span> India's Career Clarity Platform
           </div>
-          <h1>
+          <h2>
             Your Career.
             <br />
             Your Path.
             <br />
             <em>Your Zen.</em>
-          </h1>
+          </h2>
           <p className="hero-sub">
             PathZen helps engineering students discover the right career path
             and prepare for real industry roles through structured mentorship,
@@ -123,20 +123,6 @@ const HomePage = ({ setPage, navigate }) => {
             <button className="btn-outline" onClick={() => setPage('about')}>
               Learn More
             </button>
-          </div>
-          <div className="hero-stats">
-            <div className="stat-item">
-              <div className="stat-num">500+</div>
-              <div className="stat-label">Students Guided</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-num">50+</div>
-              <div className="stat-label">Industry Mentors</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-num">5</div>
-              <div className="stat-label">Career Domains</div>
-            </div>
           </div>
         </div>
       </section>
