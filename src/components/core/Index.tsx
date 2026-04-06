@@ -353,7 +353,7 @@ const HomePage = ({ setPage, navigate }) => {
             className="btn-white"
             onClick={() => navigate({ to: '/get-started' })}
           >
-            Join Now — It's Free
+            Join Now
           </button>
         </div>
       </div>
