@@ -373,7 +373,7 @@ const AboutPage = ({ setPage, navigate }) => (
         style={{ position: 'relative', zIndex: 1 }}
       >
         <div className="about-hero-tag">
-          <span className="tag-pill">Est. 2024</span>
+          <span className="tag-pill">Est. 2026</span>
           <span className="tag-pill">India-Focused</span>
           <span className="tag-pill">Student-First</span>
         </div>
